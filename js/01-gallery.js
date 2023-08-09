@@ -18,9 +18,16 @@ function getOriginalImage(event) {
   if (!event.target.classList.contains("gallery__image")) return;
   const originalSource = event.target.closest(".gallery__link").href;
 
-  instance = basicLightbox.create(`
+  instance = basicLightbox.create(
+    `
     <img src="${originalSource}" width="800" height="600">
-`);
+`,
+    {
+      onClose: () => {
+        window.removeEventListener("keydown", onEscape);
+      },
+    }
+  );
   instance.show();
 
   window.addEventListener("keydown", onEscape);
@@ -29,7 +36,5 @@ function getOriginalImage(event) {
 function onEscape(event) {
   if (event.code === "Escape" && instance) {
     instance.close();
-    instance = null;
-    window.removeEventListener("keydown", onEscape);
   }
 }
